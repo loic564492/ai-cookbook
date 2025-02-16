@@ -1,115 +1,118 @@
-# Building Knowledge Extraction Pipeline with Docling
+Construction d'un Pipeline d'Extraction de Connaissances avec Docling
 
-[Docling](https://github.com/DS4SD/docling) is a powerful, flexible open source document processing library that converts various document formats into a unified format. It has advanced document understanding capabilities powered by state-of-the-art AI models for layout analysis and table structure recognition.
+Docling est une bibliothèque open-source puissante et flexible pour le traitement de documents. Elle permet de convertir divers formats de documents en un format unifié et intègre des modèles d'IA avancés pour l'analyse de mise en page et la reconnaissance des structures de tableaux.
 
-The whole system runs locally on standard computers and is designed to be extensible - developers can add new models or modify the pipeline for specific needs. It's particularly useful for tasks like enterprise document search, passage retrieval, and knowledge extraction. With its advanced chunking and processing capabilities, it's the perfect tool for providing GenAI applications with knowledge through RAG (Retrieval Augmented Generation) pipelines.
+L’ensemble du système fonctionne localement sur des ordinateurs standards et est conçu pour être extensible : les développeurs peuvent ajouter de nouveaux modèles ou modifier le pipeline selon leurs besoins. Il est particulièrement utile pour des tâches telles que la recherche documentaire en entreprise, la récupération de passages et l’extraction de connaissances. Grâce à ses capacités avancées de segmentation et de traitement, c'est l'outil idéal pour alimenter les applications d'IA générative avec des pipelines RAG (Retrieval-Augmented Generation).
 
-## Key Features
+Principales Fonctionnalités
+✅ Support universel de formats : prise en charge des fichiers PDF, DOCX, XLSX, PPTX, Markdown, HTML, images, etc.
+✅ Compréhension avancée : analyse de mise en page et reconnaissance des structures de tableaux grâce à l’IA
+✅ Sortie flexible : exportation en HTML, Markdown, JSON ou texte brut
+✅ Haute performance : traitement rapide sur du matériel local
 
-- **Universal Format Support**: Process PDF, DOCX, XLSX, PPTX, Markdown, HTML, images, and more
-- **Advanced Understanding**: AI-powered layout analysis and table structure recognition
-- **Flexible Output**: Export to HTML, Markdown, JSON, or plain text
-- **High Performance**: Efficient processing on local hardware
+Améliorations en cours
+🛠 Extraction automatique des métadonnées (titre, auteurs, références, langue)
+🛠 Intégration de modèles de langage visuel (SmolDocling)
+🛠 Compréhension de graphiques (diagrammes en barres, camemberts, courbes, etc.)
+🛠 Analyse avancée de structures chimiques (molécules, formules)
 
-## Things They're Working on
+Démarrage avec l'exemple
+Prérequis
+1️⃣ Installez les dépendances :
 
-- Metadata extraction, including title, authors, references & language
-- Inclusion of Visual Language Models (SmolDocling)
-- Chart understanding (Barchart, Piechart, LinePlot, etc)
-- Complex chemistry understanding (Molecular structures)
-
-## Getting Started with the Example
-
-### Prerequisites
-
-1. Install the required packages:
-
-```bash
+bash
+Copier
+Modifier
 pip install -r requirements.txt
-```
+2️⃣ Configurez votre environnement en créant un fichier .env :
 
-2. Set up your environment variables by creating a `.env` file:
-
-```bash
+bash
+Copier
+Modifier
 OPENAI_API_KEY=your_api_key_here
-```
+Exécution du pipeline
+Exécutez les scripts dans l'ordre suivant pour construire et interroger la base documentaire :
 
-### Running the Example
+1️⃣ Extraction du contenu des documents :
 
-Execute the files in order to build and query the document database:
+bash
+Copier
+Modifier
+python 1-extraction.py
+2️⃣ Segmentation des documents en fragments :
 
-1. Extract document content: `python 1-extraction.py`
-2. Create document chunks: `python 2-chunking.py`
-3. Create embeddings and store in LanceDB: `python 3-embedding.py`
-4. Test basic search functionality: `python 4-search.py`
-5. Launch the Streamlit chat interface: `streamlit run 5-chat.py`
+bash
+Copier
+Modifier
+python 2-chunking.py
+3️⃣ Création des embeddings et stockage dans LanceDB :
 
-Then open your browser and navigate to `http://localhost:8501` to interact with the document Q&A interface.
+bash
+Copier
+Modifier
+python 3-embedding.py
+4️⃣ Test de la recherche basique :
 
-## Document Processing
+bash
+Copier
+Modifier
+python 4-search.py
+5️⃣ Lancement de l’interface Streamlit pour le chat :
 
-### Supported Input Formats
+bash
+Copier
+Modifier
+streamlit run 5-chat.py
+Puis, ouvrez votre navigateur et accédez à http://localhost:8501 pour interagir avec l’interface de questions-réponses.
 
-| Format | Description |
-|--------|-------------|
-| PDF | Native PDF documents with layout preservation |
-| DOCX, XLSX, PPTX | Microsoft Office formats (2007+) |
-| Markdown | Plain text with markup |
-| HTML/XHTML | Web documents |
-| Images | PNG, JPEG, TIFF, BMP |
-| USPTO XML | Patent documents |
-| PMC XML | PubMed Central articles |
+Traitement des Documents
+Formats Pris en Charge
+Format	Description
+PDF	Documents PDF natifs avec préservation de la mise en page
+DOCX, XLSX, PPTX	Fichiers Microsoft Office (2007+)
+Markdown	Texte brut avec balisage
+HTML/XHTML	Documents Web
+Images	PNG, JPEG, TIFF, BMP
+USPTO XML	Brevets déposés auprès de l'USPTO
+PMC XML	Articles scientifiques de PubMed Central
+Pipeline de Traitement
+Le pipeline standard inclut :
+📌 Analyse du format avec des outils spécifiques
+📌 Reconnaissance de mise en page via des modèles IA
+📌 Détection des structures de tableaux
+📌 Extraction des métadonnées
+📌 Organisation et structuration du contenu
+📌 Formatage pour l'exportation
 
-Check out this [page](https://ds4sd.github.io/docling/supported_formats/) for an up to date list.
+Modèles Utilisés
+Docling repose sur deux modèles spécialisés pour la compréhension des documents :
 
-### Processing Pipeline
+1️⃣ Modèle d’analyse de mise en page basé sur RT-DETR (Real-Time Detection Transformer). Il détecte et classe les éléments d'une page en moins d’une seconde sur un CPU standard. Il est entraîné sur DocLayNet, un dataset spécialisé.
 
-The standard pipeline includes:
+2️⃣ TableFormer, un modèle de reconnaissance de structures de tableaux. Il gère des tableaux complexes avec cellules fusionnées, bordures partielles, en-têtes hiérarchiques… Il traite un tableau en 2 à 6 secondes sur CPU.
 
-1. Document parsing with format-specific backend
-2. Layout analysis using AI models
-3. Table structure recognition
-4. Metadata extraction
-5. Content organization and structuring
-6. Export formatting
+🔍 OCR en option : Pour l’extraction de texte à partir d’images, Docling peut intégrer EasyOCR. Ce module fonctionne à 216 dpi mais nécessite environ 30 secondes par page.
 
-## Models
+Les modèles sont disponibles sur Hugging Face sous ds4sd/docling-models.
 
-Docling leverages two primary specialized AI models for document understanding. At its core, the layout analysis model is built on the `RT-DETR (Real-Time Detection Transformer)` architecture, which excels at detecting and classifying page elements. This model processes pages at 72 dpi resolution and can analyze a single page in under a second on a standard CPU, having been trained on the comprehensive `DocLayNet` dataset.
+Segmentation Intelligente des Documents (Chunking)
+Lorsqu'on construit une application RAG, il faut découper les documents en morceaux pertinents et exploitables. Mais une découpe arbitraire (tous les 500 mots, par exemple) peut briser le contexte.
 
-The second key model is `TableFormer`, a table structure recognition system that can handle complex table layouts including partial borders, empty cells, spanning cells, and hierarchical headers. TableFormer typically processes tables in 2-6 seconds on CPU, making it efficient for practical use. 
+Méthodes de segmentation
+🔹 Chunking hiérarchique : détecte automatiquement les structures naturelles du document (sections, paragraphes, listes…) pour éviter des coupures inappropriées.
+🔹 Chunking hybride : améliore encore la segmentation en :
 
-For documents requiring text extraction from images, Docling integrates `EasyOCR` as an optional component, which operates at 216 dpi for optimal quality but requires about 30 seconds per page. Both the layout analysis and TableFormer models were developed by IBM Research and are publicly available as pre-trained weights on Hugging Face under "ds4sd/docling-models".
+Fractionnant les morceaux trop longs pour s’adapter au modèle d’embedding
+Fusionnant les morceaux trop courts
+Optimisant la taille des segments pour le tokenizer utilisé
+Pourquoi c'est essentiel pour le RAG ?
+Contrairement à une découpe rigide, Docling garantit :
+✅ Une cohérence contextuelle : les titres restent associés à leur contenu
+✅ La préservation des structures : listes, tableaux et légendes ne sont pas éclatés
+✅ Une meilleure pertinence des résultats : chaque segment est autonome et significatif
 
-For more detailed information about these models and their implementation, you can refer to the [technical documentation](arxiv.org/pdf/2408.09869).
+Cela permet d’améliorer la récupération d’information et la précision des réponses des modèles d’IA.
 
-## Chunking
-
-When you're building a RAG (Retrieval Augmented Generation) application, you need to break down documents into smaller, meaningful pieces that can be easily searched and retrieved. But this isn't as simple as just splitting text every X words or characters.
-
-What makes [Docling's chunking](https://ds4sd.github.io/docling/concepts/chunking/) unique is that it understands the actual structure of your document. It has two main approaches:
-
-1. The [Hierarchical Chunker](https://ds4sd.github.io/docling/concepts/chunking/#hierarchical-chunker) is like a smart document analyzer - it knows where the natural "joints" of your document are. Instead of blindly cutting text into fixed-size pieces, it recognizes and preserves important elements like sections, paragraphs, tables, and lists. It maintains the relationship between headers and their content, and keeps related items together (like items in a list).
-
-2. The [Hybrid Chunker](https://ds4sd.github.io/docling/concepts/chunking/#hybrid-chunker) takes this a step further. It starts with the hierarchical chunks but then:
-   - It can split chunks that are too large for your embedding model
-   - It can stitch together chunks that are too small
-   - It works with your specific tokenizer, so the chunks will fit perfectly with your chosen language model
-
-### Why is this great for RAG applications?
-
-Imagine you're building a system to answer questions about technical documents. With basic chunking (like splitting every 500 words), you might cut right through the middle of a table, or separate a header from its content. But Docling's smart chunking:
-
-- Keeps related information together
-- Preserves document structure
-- Maintains context (like headers and captions)
-- Creates chunks that are optimized for your specific embedding model
-- Ensures each chunk is meaningful and self-contained
-
-This means when your RAG system retrieves chunks, they'll have the proper context and structure, leading to more accurate and coherent responses from your language model.
-
-## Documentation
-
-For full documentation, visit [documentation site](https://docling.readthedocs.io/).
-
-For example notebooks and more detailed guides, check out [GitHub repository](https://github.com/organization/docling).
+Documentation
+📖 Documentation complète : consultez le site officiel.
+📂 Exemples et guides détaillés : explorez le dépôt GitHub.
